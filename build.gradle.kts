@@ -10,6 +10,10 @@ tasks.withType<JavaCompile>().configureEach {
     options.annotationProcessorPath = configurations.annotationProcessor.get()
 }
 
+tasks.withType<Test>().configureEach {
+    useJUnitPlatform()
+}
+
 val runConfigs = listOf(
     "runClient" to "run/client",
     "runClient17" to "run/client_new",

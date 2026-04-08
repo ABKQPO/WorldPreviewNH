@@ -1,5 +1,9 @@
 package com.hfstudio;
 
+import net.minecraftforge.common.MinecraftForge;
+
+import com.hfstudio.preview.CreateWorldHandler;
+
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -10,6 +14,7 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void init(FMLInitializationEvent event) {
         super.init(event);
+        MinecraftForge.EVENT_BUS.register(new CreateWorldHandler());
     }
 
     @Override

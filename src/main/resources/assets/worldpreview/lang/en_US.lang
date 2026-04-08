@@ -1,0 +1,118 @@
+# World Preview NH - English Language File
+
+# GUI Screen
+worldpreview.gui.title=World Preview
+worldpreview.gui.back=Back
+worldpreview.gui.reset=Reset
+worldpreview.gui.seed=Seed: %s
+worldpreview.gui.worldtype=Type: %s
+worldpreview.gui.dimension=Dim: %s
+worldpreview.gui.zoom=Zoom: %s blk/px
+worldpreview.gui.biome=Biome: %s
+worldpreview.gui.center=Center: %s, %s
+worldpreview.gui.loading=Generating preview...
+worldpreview.gui.single_biome=%s - Single biome dimension
+worldpreview.gui.scroll_zoom=Scroll to zoom, drag to pan
+worldpreview.gui.copied=Copied: %s
+worldpreview.gui.search_hint=Search biomes...
+
+# Button Tooltip
+worldpreview.button.tooltip=Preview World
+worldpreview.ingame.preview=World Preview
+
+# Tabs
+worldpreview.tab.biomes=Biomes
+worldpreview.tab.seeds=Seeds
+
+# Toolbar Tooltips
+worldpreview.tooltip.settings=Settings
+worldpreview.tooltip.caves=Toggle Caves
+worldpreview.tooltip.home=Reset to 0,0
+worldpreview.tooltip.heightmap=Toggle Heightmap
+worldpreview.tooltip.intersections=Toggle Y Intersection
+worldpreview.tooltip.random_seed=Random Seed
+worldpreview.tooltip.refresh=Refresh Preview
+worldpreview.tooltip.save_seed=Save Seed
+worldpreview.tooltip.delete_seed=Delete Seed
+worldpreview.tooltip.mod_source=Mod
+worldpreview.tooltip.no_translation=No translation
+worldpreview.tooltip.alt_classpath=Hold Alt for class path
+
+# Coordinate Goto
+worldpreview.goto.title=Coordinates
+worldpreview.goto.go=Go
+worldpreview.goto.cancel=Cancel
+
+# Settings
+worldpreview.settings.title=Preview Settings
+worldpreview.settings.done=Done
+worldpreview.settings.height_sampling=Height Sampling
+worldpreview.settings.y_intersection=Y-Layer Intersection
+worldpreview.settings.show_caves=Show Caves
+worldpreview.settings.zoom=Zoom: %s blk/px
+worldpreview.settings.on=ON
+worldpreview.settings.off=OFF
+
+# Biome Names (translation keys for biome list display)
+biome.worldpreview.ocean=Ocean
+biome.worldpreview.plains=Plains
+biome.worldpreview.desert=Desert
+biome.worldpreview.extreme_hills=Extreme Hills
+biome.worldpreview.forest=Forest
+biome.worldpreview.taiga=Taiga
+biome.worldpreview.swampland=Swampland
+biome.worldpreview.river=River
+biome.worldpreview.hell=Nether
+biome.worldpreview.sky=The End
+biome.worldpreview.frozenocean=Frozen Ocean
+biome.worldpreview.frozenriver=Frozen River
+biome.worldpreview.ice_plains=Ice Plains
+biome.worldpreview.ice_mountains=Ice Mountains
+biome.worldpreview.mushroomisland=Mushroom Island
+biome.worldpreview.mushroomislandshore=Mushroom Island Shore
+biome.worldpreview.beach=Beach
+biome.worldpreview.deserthills=Desert Hills
+biome.worldpreview.foresthills=Forest Hills
+biome.worldpreview.taigahills=Taiga Hills
+biome.worldpreview.extreme_hills_edge=Extreme Hills Edge
+biome.worldpreview.jungle=Jungle
+biome.worldpreview.junglehills=Jungle Hills
+biome.worldpreview.jungleedge=Jungle Edge
+biome.worldpreview.deep_ocean=Deep Ocean
+biome.worldpreview.stone_beach=Stone Beach
+biome.worldpreview.cold_beach=Cold Beach
+biome.worldpreview.birch_forest=Birch Forest
+biome.worldpreview.birch_forest_hills=Birch Forest Hills
+biome.worldpreview.roofed_forest=Roofed Forest
+biome.worldpreview.cold_taiga=Cold Taiga
+biome.worldpreview.cold_taiga_hills=Cold Taiga Hills
+biome.worldpreview.mega_taiga=Mega Taiga
+biome.worldpreview.mega_taiga_hills=Mega Taiga Hills
+biome.worldpreview.extreme_hills+=Extreme Hills+
+biome.worldpreview.savanna=Savanna
+biome.worldpreview.savanna_plateau=Savanna Plateau
+biome.worldpreview.mesa=Mesa
+biome.worldpreview.mesa_plateau_f=Mesa Plateau F
+biome.worldpreview.mesa_plateau=Mesa Plateau
+
+# Mutated/Variant Biomes
+biome.worldpreview.sunflower_plains=Sunflower Plains
+biome.worldpreview.desert_m=Desert M
+biome.worldpreview.extreme_hills_m=Extreme Hills M
+biome.worldpreview.flower_forest=Flower Forest
+biome.worldpreview.taiga_m=Taiga M
+biome.worldpreview.swampland_m=Swampland M
+biome.worldpreview.ice_plains_spikes=Ice Plains Spikes
+biome.worldpreview.jungle_m=Jungle M
+biome.worldpreview.jungleedge_m=JungleEdge M
+biome.worldpreview.birch_forest_m=Birch Forest M
+biome.worldpreview.birch_forest_hills_m=Birch Forest Hills M
+biome.worldpreview.roofed_forest_m=Roofed Forest M
+biome.worldpreview.cold_taiga_m=Cold Taiga M
+biome.worldpreview.mega_spruce_taiga=Mega Spruce Taiga
+biome.worldpreview.extreme_hills+_m=Extreme Hills+ M
+biome.worldpreview.savanna_m=Savanna M
+biome.worldpreview.savanna_plateau_m=Savanna Plateau M
+biome.worldpreview.mesa_(bryce)=Mesa (Bryce)
+biome.worldpreview.mesa_plateau_f_m=Mesa Plateau F M
+biome.worldpreview.mesa_plateau_m=Mesa Plateau M

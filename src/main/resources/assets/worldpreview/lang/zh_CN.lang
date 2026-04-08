@@ -1,0 +1,118 @@
+# World Preview NH - 简体中文语言文件
+
+# GUI 界面
+worldpreview.gui.title=世界预览
+worldpreview.gui.back=返回
+worldpreview.gui.reset=重置
+worldpreview.gui.seed=种子: %s
+worldpreview.gui.worldtype=类型: %s
+worldpreview.gui.dimension=维度: %s
+worldpreview.gui.zoom=缩放: %s 方块/像素
+worldpreview.gui.biome=群系: %s
+worldpreview.gui.center=中心: %s, %s
+worldpreview.gui.loading=正在生成预览...
+worldpreview.gui.single_biome=%s - 单一群系维度
+worldpreview.gui.scroll_zoom=滚轮缩放, 拖拽移动
+worldpreview.gui.copied=已复制: %s
+worldpreview.gui.search_hint=搜索群系...
+
+# 按钮提示
+worldpreview.button.tooltip=预览世界
+worldpreview.ingame.preview=世界预览
+
+# 选项卡
+worldpreview.tab.biomes=群系
+worldpreview.tab.seeds=种子
+
+# 工具栏提示
+worldpreview.tooltip.settings=设置
+worldpreview.tooltip.caves=切换洞穴
+worldpreview.tooltip.home=重置到 0,0
+worldpreview.tooltip.heightmap=切换高度图
+worldpreview.tooltip.intersections=切换Y轴交点
+worldpreview.tooltip.random_seed=随机种子
+worldpreview.tooltip.refresh=刷新预览
+worldpreview.tooltip.save_seed=保存种子
+worldpreview.tooltip.delete_seed=删除种子
+worldpreview.tooltip.mod_source=来源模组
+worldpreview.tooltip.no_translation=缺少翻译
+worldpreview.tooltip.alt_classpath=按住Alt查看类路径
+
+# 坐标跳转
+worldpreview.goto.title=跳转坐标
+worldpreview.goto.go=前往
+worldpreview.goto.cancel=取消
+
+# 设置
+worldpreview.settings.title=预览设置
+worldpreview.settings.done=完成
+worldpreview.settings.height_sampling=高度采样
+worldpreview.settings.y_intersection=Y轴交点采样
+worldpreview.settings.show_caves=显示洞穴
+worldpreview.settings.zoom=缩放: %s 方块/像素
+worldpreview.settings.on=开
+worldpreview.settings.off=关
+
+# 群系名称 (群系列表显示翻译)
+biome.worldpreview.ocean=海洋
+biome.worldpreview.plains=平原
+biome.worldpreview.desert=沙漠
+biome.worldpreview.extreme_hills=风袭丘陵
+biome.worldpreview.forest=森林
+biome.worldpreview.taiga=针叶林
+biome.worldpreview.swampland=沼泽
+biome.worldpreview.river=河流
+biome.worldpreview.hell=下界
+biome.worldpreview.sky=末地
+biome.worldpreview.frozenocean=冻洋
+biome.worldpreview.frozenriver=冻河
+biome.worldpreview.ice_plains=雪原
+biome.worldpreview.ice_mountains=雪山
+biome.worldpreview.mushroomisland=蘑菇岛
+biome.worldpreview.mushroomislandshore=蘑菇岛岸
+biome.worldpreview.beach=沙滩
+biome.worldpreview.deserthills=沙漠丘陵
+biome.worldpreview.foresthills=繁茂的丘陵
+biome.worldpreview.taigahills=针叶林丘陵
+biome.worldpreview.extreme_hills_edge=山地边缘
+biome.worldpreview.jungle=丛林
+biome.worldpreview.junglehills=丛林丘陵
+biome.worldpreview.jungleedge=稀疏丛林
+biome.worldpreview.deep_ocean=深海
+biome.worldpreview.stone_beach=石岸
+biome.worldpreview.cold_beach=积雪沙滩
+biome.worldpreview.birch_forest=桦木森林
+biome.worldpreview.birch_forest_hills=桦木森林丘陵
+biome.worldpreview.roofed_forest=黑森林
+biome.worldpreview.cold_taiga=积雪针叶林
+biome.worldpreview.cold_taiga_hills=积雪的针叶林丘陵
+biome.worldpreview.mega_taiga=原始松木针叶林
+biome.worldpreview.mega_taiga_hills=巨型针叶林丘陵
+biome.worldpreview.extreme_hills+=风袭森林
+biome.worldpreview.savanna=热带草原
+biome.worldpreview.savanna_plateau=热带高原
+biome.worldpreview.mesa=恶地
+biome.worldpreview.mesa_plateau_f=疏林恶地
+biome.worldpreview.mesa_plateau=恶地高原
+
+# 变种群系
+biome.worldpreview.sunflower_plains=向日葵平原
+biome.worldpreview.desert_m=沙漠湖泊
+biome.worldpreview.extreme_hills_m=风袭沙砾丘陵
+biome.worldpreview.flower_forest=繁花森林
+biome.worldpreview.taiga_m=针叶林山地
+biome.worldpreview.swampland_m=沼泽丘陵
+biome.worldpreview.ice_plains_spikes=冰刺之地
+biome.worldpreview.jungle_m=丛林变种
+biome.worldpreview.jungleedge_m=丛林边缘变种
+biome.worldpreview.birch_forest_m=高大桦木森林
+biome.worldpreview.birch_forest_hills_m=高大桦木丘陵
+biome.worldpreview.roofed_forest_m=黑森林丘陵
+biome.worldpreview.cold_taiga_m=积雪的针叶林山地
+biome.worldpreview.mega_spruce_taiga=原始云杉针叶林
+biome.worldpreview.extreme_hills+_m=沙砾山地+
+biome.worldpreview.savanna_m=风袭热带草原
+biome.worldpreview.savanna_plateau_m=破碎的热带高原
+biome.worldpreview.mesa_(bryce)=风蚀恶地
+biome.worldpreview.mesa_plateau_f_m=繁茂的恶地高原变种
+biome.worldpreview.mesa_plateau_m=恶地高原变种

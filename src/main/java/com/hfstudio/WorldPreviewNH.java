@@ -14,7 +14,6 @@ import cpw.mods.fml.common.event.FMLMissingMappingsEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 
 @Mod(modid = MODID, version = Tags.VERSION, name = MODNAME, acceptedMinecraftVersions = "1.7.10")
 public class WorldPreviewNH {
@@ -26,8 +25,6 @@ public class WorldPreviewNH {
     public static final String VERSION = Tags.VERSION;
     public static final String ARTHOR = "HFstudio";
     public static final Logger LOG = LogManager.getLogger(MODID);
-
-    public static SimpleNetworkWrapper network;
 
     @SidedProxy(clientSide = "com.hfstudio.ClientProxy", serverSide = "com.hfstudio.CommonProxy")
     public static CommonProxy proxy;
