@@ -1,4 +1,4 @@
-package com.hfstudio.preview;
+package com.hfstudio.preview.gui;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -20,6 +20,14 @@ import net.minecraft.world.biome.BiomeGenBase;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
+
+import com.hfstudio.WorldPreviewNH;
+import com.hfstudio.preview.biome.BiomeColorMap;
+import com.hfstudio.preview.biome.BiomeKeyExporter;
+import com.hfstudio.preview.biome.BiomeSampler;
+import com.hfstudio.preview.data.DimensionInfo;
+import com.hfstudio.preview.data.PreviewSettings;
+import com.hfstudio.preview.data.SeedStorage;
 
 import lombok.Getter;
 
@@ -81,6 +89,9 @@ public class GuiWorldPreview extends GuiScreen {
     // Coordinate copy message
     private String copiedMessage = null;
     private long copiedMessageTime = 0;
+
+    // First-open flag for debug export
+    private static boolean firstOpen = true;
 
     // Tab state: 0=Biomes, 1=Seeds
     private int activeTab = 0;
@@ -188,6 +199,12 @@ public class GuiWorldPreview extends GuiScreen {
     @Override
     public void initGui() {
         Keyboard.enableRepeatEvents(true);
+
+        // Export biome keys on first open when debug is enabled
+        if (firstOpen && WorldPreviewNH.debug) {
+            firstOpen = false;
+            BiomeKeyExporter.export();
+        }
 
         // Left panel layout
         panelX = PADDING;

@@ -1,4 +1,4 @@
-package com.hfstudio.preview;
+package com.hfstudio.preview.biome;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,6 +15,8 @@ import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.WorldChunkManager;
 import net.minecraft.world.biome.WorldChunkManagerHell;
+
+import com.hfstudio.preview.data.DimensionInfo;
 
 import lombok.Getter;
 

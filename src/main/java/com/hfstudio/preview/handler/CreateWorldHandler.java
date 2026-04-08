@@ -1,4 +1,4 @@
-package com.hfstudio.preview;
+package com.hfstudio.preview.handler;
 
 import java.util.Random;
 
@@ -12,6 +12,8 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.world.WorldType;
 import net.minecraftforge.client.event.GuiScreenEvent;
 
+import com.hfstudio.preview.gui.GuiPreviewButton;
+import com.hfstudio.preview.gui.GuiWorldPreview;
 import com.hfstudio.preview.network.ServerSeedData;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;

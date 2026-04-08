@@ -21,6 +21,9 @@ import net.minecraft.world.biome.WorldChunkManagerHell;
 
 import org.junit.jupiter.api.Test;
 
+import com.hfstudio.preview.data.DimensionInfo;
+import com.hfstudio.preview.data.PreviewDummyWorld;
+
 /**
  * Tests that DimensionInfo correctly delegates to custom WorldType.getChunkManager(World),
  * ensuring modded world types (e.g., RWG) produce the correct WorldChunkManager

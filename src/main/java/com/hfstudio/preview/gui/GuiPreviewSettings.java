@@ -1,8 +1,10 @@
-package com.hfstudio.preview;
+package com.hfstudio.preview.gui;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.StatCollector;
+
+import com.hfstudio.preview.data.PreviewSettings;
 
 /**
  * Settings screen for the world preview.

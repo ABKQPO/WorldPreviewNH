@@ -1,4 +1,4 @@
-package com.hfstudio.preview;
+package com.hfstudio.preview.data;
 
 /**
  * Holds all preview settings. Shared between GUI screens.

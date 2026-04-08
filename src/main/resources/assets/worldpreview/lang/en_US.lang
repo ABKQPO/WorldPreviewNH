@@ -54,6 +54,7 @@ worldpreview.settings.on=ON
 worldpreview.settings.off=OFF
 
 # Biome Names (translation keys for biome list display)
+# Vanilla Biomes
 biome.worldpreview.ocean=Ocean
 biome.worldpreview.plains=Plains
 biome.worldpreview.desert=Desert
@@ -95,6 +96,93 @@ biome.worldpreview.mesa=Mesa
 biome.worldpreview.mesa_plateau_f=Mesa Plateau F
 biome.worldpreview.mesa_plateau=Mesa Plateau
 
+# Biomes O' Plenty
+biome.worldpreview.alps_forest=Alps Forest
+biome.worldpreview.alps=Alps
+biome.worldpreview.arctic=Arctic
+biome.worldpreview.bamboo_forest=Bamboo Forest
+biome.worldpreview.bayou=Bayou
+biome.worldpreview.bog=Bog
+biome.worldpreview.boreal_forest=Boreal Forest
+biome.worldpreview.brushland=Brushland
+biome.worldpreview.canyon=Canyon
+biome.worldpreview.canyon_ravine=Canyon Ravine
+biome.worldpreview.chaparral=Chaparral
+biome.worldpreview.cherry_blossom_grove=Cherry Blossom Grove
+biome.worldpreview.coniferous_forest=Coniferous Forest
+biome.worldpreview.coral_reef=Coral Reef
+biome.worldpreview.crag=Crag
+biome.worldpreview.dead_forest=Dead Forest
+biome.worldpreview.dead_swamp=Dead Swamp
+biome.worldpreview.deciduous_forest=Deciduous Forest
+biome.worldpreview.dry_river=Dry River
+biome.worldpreview.eucalyptus_forest=Eucalyptus Forest
+biome.worldpreview.fen=Fen
+biome.worldpreview.flower_field=Flower Field
+biome.worldpreview.frost_forest=Frost Forest
+biome.worldpreview.fungi_forest=Fungi Forest
+biome.worldpreview.garden=Garden
+biome.worldpreview.glacier=Glacier
+biome.worldpreview.grassland=Grassland
+biome.worldpreview.grove=Grove
+biome.worldpreview.heathland=Heathland
+biome.worldpreview.highland=Highland
+biome.worldpreview.jade_cliffs=Jade Cliffs
+biome.worldpreview.kelp_forest=Kelp Forest
+biome.worldpreview.land_of_lakes=Land of Lakes
+biome.worldpreview.land_of_lakes_marsh=Land of Lakes Marsh
+biome.worldpreview.lavender_fields=Lavender Fields
+biome.worldpreview.lush_desert=Lush Desert
+biome.worldpreview.lush_river=Lush River
+biome.worldpreview.lush_swamp=Lush Swamp
+biome.worldpreview.mangrove=Mangrove
+biome.worldpreview.maple_woods=Maple Woods
+biome.worldpreview.marsh=Marsh
+biome.worldpreview.meadow_forest=Meadow Forest
+biome.worldpreview.meadow=Meadow
+biome.worldpreview.moor=Moor
+biome.worldpreview.mountain=Mountain
+biome.worldpreview.mystic_grove=Mystic Grove
+biome.worldpreview.oasis=Oasis
+biome.worldpreview.ominous_woods=Ominous Woods
+biome.worldpreview.orchard=Orchard
+biome.worldpreview.origin_valley=Origin Valley
+biome.worldpreview.outback=Outback
+biome.worldpreview.polar_chasm=Polar Chasm
+biome.worldpreview.prairie=Prairie
+biome.worldpreview.quagmire=Quagmire
+biome.worldpreview.rainforest=Rainforest
+biome.worldpreview.redwood_forest=Redwood Forest
+biome.worldpreview.sacred_springs=Sacred Springs
+biome.worldpreview.scrubland=Scrubland
+biome.worldpreview.seasonal_forest_clearing=Seasonal Forest Clearing
+biome.worldpreview.seasonal_forest=Seasonal Forest
+biome.worldpreview.shield=Shield
+biome.worldpreview.shrubland=Shrubland
+biome.worldpreview.silkglades=Silkglades
+biome.worldpreview.sludgepit=Sludgepit
+biome.worldpreview.snowy_coniferous_forest=Snowy Coniferous Forest
+biome.worldpreview.spectral_garden=Spectral Garden
+biome.worldpreview.spruce_woods=Spruce Woods
+biome.worldpreview.steppe=Steppe
+biome.worldpreview.temperate_rainforest=Temperate Rainforest
+biome.worldpreview.thicket=Thicket
+biome.worldpreview.tropical_rainforest=Tropical Rainforest
+biome.worldpreview.tropics=Tropics
+biome.worldpreview.tundra=Tundra
+biome.worldpreview.visceral_heap=Visceral Heap
+biome.worldpreview.volcano=Volcano
+biome.worldpreview.wasteland=Wasteland
+biome.worldpreview.wetland=Wetland
+biome.worldpreview.woodland=Woodland
+biome.worldpreview.xeric_shrubland=Xeric Shrubland
+
+# GregTech/Industrial Biomes
+biome.worldpreview.dense_forest=Dense Forest
+biome.worldpreview.ocean_oil_field=Ocean Oil Field
+biome.worldpreview.desert_oil_field=Desert Oil Field
+biome.worldpreview.boneyard=Boneyard
+
 # Mutated/Variant Biomes
 biome.worldpreview.sunflower_plains=Sunflower Plains
 biome.worldpreview.desert_m=Desert M
@@ -116,3 +204,86 @@ biome.worldpreview.savanna_plateau_m=Savanna Plateau M
 biome.worldpreview.mesa_(bryce)=Mesa (Bryce)
 biome.worldpreview.mesa_plateau_f_m=Mesa Plateau F M
 biome.worldpreview.mesa_plateau_m=Mesa Plateau M
+
+# Applied Energistics 2
+biome.worldpreview.storage_cell=Storage Cell
+
+# Nether Biomes
+biome.worldpreview.corrupted_sands=Corrupted Sands
+biome.worldpreview.phantasmagoric_inferno=Phantasmagoric Inferno
+biome.worldpreview.undergarden=Undergarden
+
+# Galacticraft / Galaxy Space
+biome.worldpreview.moon=Moon
+biome.worldpreview.marsflat=Mars
+biome.worldpreview.asteroids=Asteroids
+biome.worldpreview.space=Space
+biome.worldpreview.venus=Venus
+biome.worldpreview.pluto=Pluto
+biome.worldpreview.pluto2=Pluto 2
+biome.worldpreview.pluto3=Pluto 3
+biome.worldpreview.pluto4=Pluto 4
+biome.worldpreview.io=Io
+biome.worldpreview.ioash=Io Ash
+biome.worldpreview.titan=Titan
+biome.worldpreview.barnardacshores=Barnarda C Shores
+biome.worldpreview.barnardachills=Barnarda C Hills
+biome.worldpreview.barnardaclowplains=Barnarda C Low Plains
+biome.worldpreview.barnardacflowers=Barnarda C Flowers
+biome.worldpreview.barnardacoceans=Barnarda C Oceans
+
+# Twilight Forest
+biome.worldpreview.twilight_clearing=Twilight Clearing
+biome.worldpreview.dark_forest=Dark Forest
+biome.worldpreview.dark_forest_center=Dark Forest Center
+biome.worldpreview.deep_mushroom_forest=Deep Mushroom Forest
+biome.worldpreview.fire_swamp=Fire Swamp
+biome.worldpreview.twilight_glacier=Twilight Glacier
+biome.worldpreview.twilight_highlands=Twilight Highlands
+biome.worldpreview.highlands_center=Highlands Center
+biome.worldpreview.twilight_lake=Twilight Lake
+biome.worldpreview.firefly_forest=Firefly Forest
+biome.worldpreview.mushroom_forest=Mushroom Forest
+biome.worldpreview.oak_savanna=Oak Savanna
+biome.worldpreview.twilight_stream=Twilight Stream
+biome.worldpreview.twilight_swamp=Twilight Swamp
+biome.worldpreview.thornlands=Thornlands
+biome.worldpreview.twilight_forest=Twilight Forest
+biome.worldpreview.dense_twilight_forest=Dense Twilight Forest
+biome.worldpreview.enchanted_forest=Enchanted Forest
+
+# Thaumcraft
+biome.worldpreview.eerie=Eerie
+biome.worldpreview.eldritch=Eldritch
+biome.worldpreview.magical_forest=Magical Forest
+biome.worldpreview.tainted_land=Tainted Land
+
+# Other Mod Biomes
+biome.worldpreview.snowy_forest=Snowy Forest
+biome.worldpreview.toxic_everglades=Toxic Everglades
+
+# Realistic World Gen (RWG)
+biome.worldpreview.ice_river=Ice River
+biome.worldpreview.cold_river=Cold River
+biome.worldpreview.temperate_river=Temperate River
+biome.worldpreview.hot_river=Hot River
+biome.worldpreview.wet_river=Wet River
+biome.worldpreview.river_oasis=River Oasis
+biome.worldpreview.ice_ocean=Ice Ocean
+biome.worldpreview.cold_ocean=Cold Ocean
+biome.worldpreview.temperate_ocean=Temperate Ocean
+biome.worldpreview.hot_ocean=Hot Ocean
+biome.worldpreview.ocean_oasis=Ocean Oasis
+biome.worldpreview.wet_ocean=Wet Ocean
+biome.worldpreview.snow_desert=Snow Desert
+biome.worldpreview.snow_forest=Snow Forest
+biome.worldpreview.cold_plains=Cold Plains
+biome.worldpreview.cold_forest=Cold Forest
+biome.worldpreview.hot_plains=Hot Plains
+biome.worldpreview.hot_forest=Hot Forest
+biome.worldpreview.hot_desert=Hot Desert
+biome.worldpreview.plains_(rwg)=Plains (RWG)
+biome.worldpreview.tropical_island=Tropical Island
+biome.worldpreview.redwood=Redwood
+biome.worldpreview.jungle_(rwg)=Jungle (RWG)
+biome.worldpreview.temperate_forest=Temperate Forest

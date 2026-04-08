@@ -1,4 +1,4 @@
-package com.hfstudio.preview;
+package com.hfstudio.preview.gui;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;

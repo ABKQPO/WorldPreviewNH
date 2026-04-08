@@ -1,4 +1,4 @@
-package com.hfstudio.preview;
+package com.hfstudio.preview.handler;
 
 import java.util.List;
 
@@ -17,6 +17,9 @@ import net.minecraftforge.client.event.GuiScreenEvent;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
+
+import com.hfstudio.preview.gui.GuiPreviewButton;
+import com.hfstudio.preview.gui.GuiWorldPreview;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 

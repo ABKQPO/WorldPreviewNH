@@ -31,6 +31,9 @@ public class WorldPreviewNH {
     public static final String ARTHOR = "HFstudio";
     public static final Logger LOG = LogManager.getLogger(MODID);
 
+    /** Debug mode: enables biome key export on first preview GUI open. */
+    public static boolean debug = false;
+
     @SidedProxy(clientSide = "com.hfstudio.ClientProxy", serverSide = "com.hfstudio.CommonProxy")
     public static CommonProxy proxy;
 

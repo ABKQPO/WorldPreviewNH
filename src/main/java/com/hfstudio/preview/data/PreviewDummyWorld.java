@@ -1,4 +1,4 @@
-package com.hfstudio.preview;
+package com.hfstudio.preview.data;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.profiler.Profiler;

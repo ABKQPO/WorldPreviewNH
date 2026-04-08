@@ -2,8 +2,8 @@ package com.hfstudio;
 
 import net.minecraftforge.common.MinecraftForge;
 
-import com.hfstudio.preview.CreateWorldHandler;
-import com.hfstudio.preview.SelectWorldHandler;
+import com.hfstudio.preview.handler.CreateWorldHandler;
+import com.hfstudio.preview.handler.SelectWorldHandler;
 import com.hfstudio.preview.network.ServerSeedData;
 
 import cpw.mods.fml.common.FMLCommonHandler;

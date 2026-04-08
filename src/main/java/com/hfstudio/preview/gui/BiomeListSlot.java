@@ -1,4 +1,4 @@
-package com.hfstudio.preview;
+package com.hfstudio.preview.gui;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,6 +13,7 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.world.biome.BiomeGenBase;
 
 import com.github.bsideup.jabel.Desugar;
+import com.hfstudio.preview.biome.BiomeColorMap;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModContainer;

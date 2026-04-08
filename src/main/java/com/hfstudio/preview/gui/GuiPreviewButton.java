@@ -1,4 +1,4 @@
-package com.hfstudio.preview;
+package com.hfstudio.preview.gui;
 
 import java.util.Arrays;
 import java.util.List;

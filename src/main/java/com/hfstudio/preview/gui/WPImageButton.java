@@ -1,4 +1,4 @@
-package com.hfstudio.preview;
+package com.hfstudio.preview.gui;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;

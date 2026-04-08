@@ -1,4 +1,4 @@
-package com.hfstudio.preview;
+package com.hfstudio.preview.biome;
 
 import java.awt.Color;
 import java.util.HashMap;
