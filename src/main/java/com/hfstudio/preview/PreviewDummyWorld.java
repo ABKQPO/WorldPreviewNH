@@ -22,6 +22,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class PreviewDummyWorld extends World {
 
+    private final long previewSeed;
+
     public PreviewDummyWorld(long seed, WorldType worldType, String generatorOptions) {
         super(
             null,
@@ -29,6 +31,7 @@ public class PreviewDummyWorld extends World {
             new WorldProviderSurface(),
             createSettings(seed, worldType, generatorOptions),
             new Profiler());
+        this.previewSeed = seed;
     }
 
     private static WorldSettings createSettings(long seed, WorldType worldType, String generatorOptions) {
@@ -37,6 +40,11 @@ public class PreviewDummyWorld extends World {
             settings.func_82750_a(generatorOptions);
         }
         return settings;
+    }
+
+    @Override
+    public long getSeed() {
+        return previewSeed;
     }
 
     @Override

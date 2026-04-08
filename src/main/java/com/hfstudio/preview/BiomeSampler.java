@@ -264,26 +264,33 @@ public class BiomeSampler {
         int worldX = tileX * tileBlockSize;
         int worldZ = tileZ * tileBlockSize;
 
-        int quartsPerPixel = Math.max(1, blocksPerPixel >> 2);
-        int startQuartX = worldX >> 2;
-        int startQuartZ = worldZ >> 2;
-        int totalQuartW = TILE_SIZE * quartsPerPixel;
+        // Vanilla WorldChunkManager.getBiomesForGeneration() uses GenLayer coordinates
+        // where 1 unit = 4 blocks (quarter-block resolution).
+        // Modded WCMs (e.g. RWG's ChunkManagerRealistic) override getBiomesForGeneration
+        // to use block coordinates (1 unit = 1 block). Passing quarter-block coords to
+        // such WCMs causes a 4x coordinate mismatch, showing wrong biomes in the preview.
+        boolean useQuartCoords = chunkManager.getClass() == WorldChunkManager.class;
+        int coordScale = useQuartCoords ? 4 : 1;
+        int unitsPerPixel = Math.max(1, blocksPerPixel / coordScale);
+        int startX = worldX / coordScale;
+        int startZ = worldZ / coordScale;
+        int rowWidth = TILE_SIZE * unitsPerPixel;
 
         BiomeGenBase[] rowBuffer = null;
         for (int py = 0; py < TILE_SIZE; py++) {
             if (generationEpoch.get() != epoch || Thread.currentThread()
                 .isInterrupted()) return result;
 
-            int quartZ = startQuartZ + py * quartsPerPixel;
+            int rowZ = startZ + py * unitsPerPixel;
             // Synchronize on chunkManager since it's not thread-safe
             synchronized (chunkManager) {
-                rowBuffer = chunkManager.getBiomesForGeneration(rowBuffer, startQuartX, quartZ, totalQuartW, 1);
+                rowBuffer = chunkManager.getBiomesForGeneration(rowBuffer, startX, rowZ, rowWidth, 1);
             }
 
             for (int px = 0; px < TILE_SIZE; px++) {
-                int quartIdx = px * quartsPerPixel;
-                if (quartIdx < rowBuffer.length && rowBuffer[quartIdx] != null) {
-                    result[py * TILE_SIZE + px] = rowBuffer[quartIdx].biomeID;
+                int sampleIdx = px * unitsPerPixel;
+                if (sampleIdx < rowBuffer.length && rowBuffer[sampleIdx] != null) {
+                    result[py * TILE_SIZE + px] = rowBuffer[sampleIdx].biomeID;
                 }
             }
         }

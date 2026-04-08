@@ -94,7 +94,13 @@ public record DimensionInfo(int dimensionId, String displayName) {
             // that override getChunkManager(World) to create their own WCM.
             try {
                 return worldType.getChunkManager(new PreviewDummyWorld(seed, worldType, generatorOptions));
-            } catch (Exception e) {
+            } catch (Throwable t) {
+                System.err.println(
+                    "[WorldPreview] Failed to create WCM via worldType.getChunkManager() for type '"
+                        + worldType.getWorldTypeName()
+                        + "': "
+                        + t);
+                t.printStackTrace();
                 return new WorldChunkManager(seed, worldType);
             }
         }
