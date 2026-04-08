@@ -809,7 +809,15 @@ public class GuiWorldPreview extends GuiScreen {
                     int biomeId = biomeData[idx];
                     BiomeGenBase[] biomeArray = BiomeGenBase.getBiomeGenArray();
                     BiomeGenBase biome = (biomeId >= 0 && biomeId < biomeArray.length) ? biomeArray[biomeId] : null;
-                    hoveredBiomeName = biome != null ? biome.biomeName : "ID:" + biomeId;
+                    if (biome != null) {
+                        String translationKey = "biome.worldpreview." + biome.biomeName.replace(' ', '_')
+                            .toLowerCase();
+                        hoveredBiomeName = StatCollector.canTranslate(translationKey)
+                            ? StatCollector.translateToLocal(translationKey)
+                            : biome.biomeName;
+                    } else {
+                        hoveredBiomeName = "ID:" + biomeId;
+                    }
                 } else {
                     hoveredBiomeName = "";
                 }
