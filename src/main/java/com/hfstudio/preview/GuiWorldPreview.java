@@ -409,11 +409,6 @@ public class GuiWorldPreview extends GuiScreen {
             seedList.drawScreenAt(panelX, panelWidth, mouseX, mouseY, partialTicks);
         }
 
-        // Biome list entry tooltip (drawn after list so it renders on top)
-        if (activeTab == 0) {
-            drawBiomeListTooltip(mouseX, mouseY);
-        }
-
         // Seed text field
         seedField.drawTextBox();
 
@@ -502,6 +497,11 @@ public class GuiWorldPreview extends GuiScreen {
 
         // Dimension hover popup
         drawDimensionPopup(mouseX, mouseY);
+
+        // Biome list tooltip (drawn last so it renders on top of everything)
+        if (activeTab == 0) {
+            drawBiomeListTooltip(mouseX, mouseY);
+        }
     }
 
     private void drawBiomeListTooltip(int mouseX, int mouseY) {
