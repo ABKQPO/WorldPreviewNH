@@ -1,0 +1,21 @@
+dependencies {
+    implementation("com.github.GTNewHorizons:GTNHLib:0.9.47:dev")
+
+    runtimeOnlyNonPublishable("com.github.GTNewHorizons:NotEnoughItems:2.7.44-GTNH:dev")
+    runtimeOnlyNonPublishable("com.github.GTNewHorizons:ServerUtilities:2.2.2:dev")
+    runtimeOnlyNonPublishable(rfg.deobf("curse.maven:spark-361579:4271867"))
+
+    compileOnly("org.projectlombok:lombok:1.18.42") { transitive = false }
+    annotationProcessor("org.projectlombok:lombok:1.18.42")
+
+    implementation("org.ow2.asm:asm-commons:9.2")
+
+    implementation("com.google.auto.value:auto-value-annotations:1.10.4")
+    annotationProcessor("com.google.auto.value:auto-value:1.10.4")
+}
+
+configurations.configureEach {
+    exclude group: "com.github.GTNewHorizons", module: "CodeChickenLib"
+    exclude group: "com.github.GTNewHorizons", module: "Hodgepodge"
+    exclude group: "com.github.GTNewHorizons", module: "Baubles"
+}
