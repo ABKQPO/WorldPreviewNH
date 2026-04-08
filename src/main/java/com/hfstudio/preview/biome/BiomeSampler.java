@@ -273,24 +273,26 @@ public class BiomeSampler {
         // such WCMs causes a 4x coordinate mismatch, showing wrong biomes in the preview.
         boolean useQuartCoords = chunkManager.getClass() == WorldChunkManager.class;
         int coordScale = useQuartCoords ? 4 : 1;
-        int unitsPerPixel = Math.max(1, blocksPerPixel / coordScale);
         int startX = worldX / coordScale;
         int startZ = worldZ / coordScale;
-        int rowWidth = TILE_SIZE * unitsPerPixel;
+        // Number of unique GenLayer samples needed per row.
+        // When blocksPerPixel >= coordScale, each pixel maps to a distinct sample.
+        // When blocksPerPixel < coordScale, multiple pixels share one sample (upscaling).
+        int samplesPerRow = Math.max(1, TILE_SIZE * blocksPerPixel / coordScale);
 
         BiomeGenBase[] rowBuffer = null;
         for (int py = 0; py < TILE_SIZE; py++) {
             if (generationEpoch.get() != epoch || Thread.currentThread()
                 .isInterrupted()) return result;
 
-            int rowZ = startZ + py * unitsPerPixel;
+            int rowZ = startZ + py * blocksPerPixel / coordScale;
             // Synchronize on chunkManager since it's not thread-safe
             synchronized (chunkManager) {
-                rowBuffer = chunkManager.getBiomesForGeneration(rowBuffer, startX, rowZ, rowWidth, 1);
+                rowBuffer = chunkManager.getBiomesForGeneration(rowBuffer, startX, rowZ, samplesPerRow, 1);
             }
 
             for (int px = 0; px < TILE_SIZE; px++) {
-                int sampleIdx = px * unitsPerPixel;
+                int sampleIdx = px * blocksPerPixel / coordScale;
                 if (sampleIdx < rowBuffer.length && rowBuffer[sampleIdx] != null) {
                     result[py * TILE_SIZE + px] = rowBuffer[sampleIdx].biomeID;
                 }
