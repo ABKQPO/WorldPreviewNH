@@ -438,23 +438,6 @@ public class GuiWorldPreview extends GuiScreen {
         // --- Draw map overlays ---
         updateHoverInfo(mouseX, mouseY);
 
-        // Biome hover tooltip on map
-        if (isInMap(mouseX, mouseY) && !hoveredBiomeName.isEmpty()) {
-            String line1 = hoveredBiomeName;
-            String line2 = "X=" + hoveredBlockX + " Z=" + hoveredBlockZ;
-            if (settings.heightSampling || settings.yIntersection) {
-                line2 += " Y=" + settings.currentY;
-            }
-            int tw = Math.max(fontRendererObj.getStringWidth(line1), fontRendererObj.getStringWidth(line2));
-            int tx = mouseX + 12;
-            int ty = mouseY - 4;
-            if (tx + tw + 4 > this.width) tx = mouseX - tw - 12;
-            if (ty < 0) ty = 0;
-            drawRect(tx - 2, ty - 2, tx + tw + 2, ty + 22, 0xD0000000);
-            fontRendererObj.drawStringWithShadow(line1, tx, ty, 0xFFFFFF);
-            fontRendererObj.drawStringWithShadow(line2, tx, ty + 11, 0xAAAAAA);
-        }
-
         // Copied coordinates message
         if (copiedMessage != null && System.currentTimeMillis() - copiedMessageTime < 5000) {
             this.drawCenteredString(
@@ -520,6 +503,23 @@ public class GuiWorldPreview extends GuiScreen {
 
         // Dimension hover popup
         drawDimensionPopup(mouseX, mouseY);
+
+        // Biome hover tooltip on map (drawn after buttons so it renders on top)
+        if (isInMap(mouseX, mouseY) && !hoveredBiomeName.isEmpty()) {
+            String line1 = hoveredBiomeName;
+            String line2 = "X=" + hoveredBlockX + " Z=" + hoveredBlockZ;
+            if (settings.heightSampling || settings.yIntersection) {
+                line2 += " Y=" + settings.currentY;
+            }
+            int tw = Math.max(fontRendererObj.getStringWidth(line1), fontRendererObj.getStringWidth(line2));
+            int tx = mouseX + 12;
+            int ty = mouseY - 4;
+            if (tx + tw + 4 > this.width) tx = mouseX - tw - 12;
+            if (ty < 0) ty = 0;
+            drawRect(tx - 2, ty - 2, tx + tw + 2, ty + 22, 0xD0000000);
+            fontRendererObj.drawStringWithShadow(line1, tx, ty, 0xFFFFFF);
+            fontRendererObj.drawStringWithShadow(line2, tx, ty + 11, 0xAAAAAA);
+        }
 
         // Biome list tooltip (drawn last so it renders on top of everything)
         if (activeTab == 0) {
