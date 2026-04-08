@@ -34,6 +34,7 @@ public class GuiWorldPreview extends GuiScreen {
     private WorldType worldType;
     private int worldTypeIndex;
     private String seedText;
+    private String generatorOptions = "";
 
     private BiomeSampler sampler;
     private DynamicTexture mapTexture;
@@ -141,24 +142,29 @@ public class GuiWorldPreview extends GuiScreen {
     private static final int ID_DIMENSION = 114;
 
     public GuiWorldPreview(GuiScreen parent, long seed, WorldType worldType) {
-        this(parent, seed, String.valueOf(seed), worldType, 0, 0, 0);
+        this(parent, seed, String.valueOf(seed), worldType, "", 0, 0, 0);
     }
 
     public GuiWorldPreview(GuiScreen parent, long seed, String seedStr, WorldType worldType) {
-        this(parent, seed, seedStr, worldType, 0, 0, 0);
+        this(parent, seed, seedStr, worldType, "", 0, 0, 0);
+    }
+
+    public GuiWorldPreview(GuiScreen parent, long seed, String seedStr, WorldType worldType, String generatorOptions) {
+        this(parent, seed, seedStr, worldType, generatorOptions, 0, 0, 0);
     }
 
     public GuiWorldPreview(GuiScreen parent, long seed, WorldType worldType, int initialCenterX, int initialCenterZ,
         int initialDimensionId) {
-        this(parent, seed, String.valueOf(seed), worldType, initialCenterX, initialCenterZ, initialDimensionId);
+        this(parent, seed, String.valueOf(seed), worldType, "", initialCenterX, initialCenterZ, initialDimensionId);
     }
 
-    public GuiWorldPreview(GuiScreen parent, long seed, String seedStr, WorldType worldType, int initialCenterX,
-        int initialCenterZ, int initialDimensionId) {
+    public GuiWorldPreview(GuiScreen parent, long seed, String seedStr, WorldType worldType, String generatorOptions,
+        int initialCenterX, int initialCenterZ, int initialDimensionId) {
         this.parentScreen = parent;
         this.seed = seed;
         this.worldType = worldType;
         this.seedText = seedStr;
+        this.generatorOptions = generatorOptions != null ? generatorOptions : "";
         this.worldTypeIndex = 0;
         for (int i = 0; i < WorldType.worldTypes.length; i++) {
             if (WorldType.worldTypes[i] == worldType) {
@@ -215,7 +221,7 @@ public class GuiWorldPreview extends GuiScreen {
         if (sampler == null) {
             sampler = new BiomeSampler();
         }
-        sampler.setup(seed, worldType, getCurrentDimensionId());
+        sampler.setup(seed, worldType, getCurrentDimensionId(), generatorOptions);
         BiomeColorMap.init();
 
         // --- Build button list ---
@@ -1136,7 +1142,7 @@ public class GuiWorldPreview extends GuiScreen {
         }
         if (newSeed != this.seed) {
             this.seed = newSeed;
-            sampler.setup(seed, worldType, getCurrentDimensionId());
+            sampler.setup(seed, worldType, getCurrentDimensionId(), generatorOptions);
             centerBlockX = 0;
             centerBlockZ = 0;
             highlightedBiomeId = -1;
@@ -1176,7 +1182,7 @@ public class GuiWorldPreview extends GuiScreen {
 
         worldType = WorldType.worldTypes[worldTypeIndex];
         btnWorldType.displayString = getWorldTypeButtonText();
-        sampler.setup(seed, worldType, getCurrentDimensionId());
+        sampler.setup(seed, worldType, getCurrentDimensionId(), generatorOptions);
         sampler.clearCache();
         requestViewportUpdate();
     }
@@ -1218,7 +1224,7 @@ public class GuiWorldPreview extends GuiScreen {
     private void applyDimension() {
         DimensionInfo dim = dimensionList.get(currentDimensionIndex);
         btnDimension.displayString = getDimensionButtonText();
-        sampler.setup(seed, worldType, dim.dimensionId());
+        sampler.setup(seed, worldType, dim.dimensionId(), generatorOptions);
         sampler.clearCache();
         requestViewportUpdate();
     }

@@ -1,6 +1,7 @@
 dependencies {
     runtimeOnlyNonPublishable(rfg.deobf("curse.maven:biomes-o-plenty-220318:2499612"))
-    runtimeOnlyNonPublishable("com.github.GTNewHorizons:RTG:1.2.0-GTNH:dev")
+    // runtimeOnlyNonPublishable("com.github.GTNewHorizons:RTG:1.2.0-GTNH:dev")
+    runtimeOnlyNonPublishable("com.github.GTNewHorizons:Realistic-World-Gen:alpha-1.5.2:dev")
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:NotEnoughItems:2.7.44-GTNH:dev")
 
     compileOnly("org.projectlombok:lombok:1.18.42") { transitive = false }

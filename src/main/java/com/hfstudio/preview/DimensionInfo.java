@@ -6,6 +6,7 @@ import java.util.List;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.WorldServer;
+import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.WorldChunkManager;
 import net.minecraft.world.biome.WorldChunkManagerHell;
@@ -69,27 +70,51 @@ public record DimensionInfo(int dimensionId, String displayName) {
      * First tries to get the actual WCM from the loaded server world (supports mod biomes).
      * Falls back to creating a new WCM based on dimension type.
      */
-    public WorldChunkManager createChunkManager(long seed, net.minecraft.world.WorldType worldType) {
-        // Try to get the WCM from the loaded server world (in-game preview with mod biomes)
-        WorldChunkManager fromServer = getChunkManagerFromServer();
+    public WorldChunkManager createChunkManager(long seed, WorldType worldType) {
+        return createChunkManager(seed, worldType, "");
+    }
+
+    /**
+     * Try to create a WorldChunkManager for this dimension.
+     * First tries to get the actual WCM from the loaded server world (supports mod biomes).
+     * Falls back to creating a new WCM based on dimension type.
+     *
+     * @param generatorOptions the generator options string (used for superflat biome selection)
+     */
+    public WorldChunkManager createChunkManager(long seed, WorldType worldType, String generatorOptions) {
+        // For overworld, use the standard constructor
+        if (dimensionId == 0) {
+            // Try to reuse server WCM if seed and world type match (supports mod biomes)
+            WorldChunkManager fromServer = getChunkManagerFromServer(seed, worldType);
+            if (fromServer != null) {
+                return fromServer;
+            }
+            // Use worldType.getChunkManager() with a lightweight dummy World.
+            // This correctly handles vanilla, FLAT, and modded WorldTypes (e.g., RWG)
+            // that override getChunkManager(World) to create their own WCM.
+            try {
+                return worldType.getChunkManager(new PreviewDummyWorld(seed, worldType, generatorOptions));
+            } catch (Exception e) {
+                return new WorldChunkManager(seed, worldType);
+            }
+        }
+
+        // For nether and end, try server WCM first (supports mod biome overrides),
+        // then fall back to vanilla single-biome managers
+        if (dimensionId == -1) {
+            WorldChunkManager fromServer = getChunkManagerFromServer(seed, worldType);
+            return fromServer != null ? fromServer : new WorldChunkManagerHell(BiomeGenBase.hell, 0.0F);
+        }
+        if (dimensionId == 1) {
+            WorldChunkManager fromServer = getChunkManagerFromServer(seed, worldType);
+            return fromServer != null ? fromServer : new WorldChunkManagerHell(BiomeGenBase.sky, 0.0F);
+        }
+
+        // For mod dimensions, try server WCM first, then provider-based, then overworld fallback
+        WorldChunkManager fromServer = getChunkManagerFromServer(seed, worldType);
         if (fromServer != null) {
             return fromServer;
         }
-
-        // For overworld, use the standard constructor
-        if (dimensionId == 0) {
-            return new WorldChunkManager(seed, worldType);
-        }
-
-        // For nether and end, use their fixed single-biome managers
-        if (dimensionId == -1) {
-            return new WorldChunkManagerHell(BiomeGenBase.hell, 0.0F);
-        }
-        if (dimensionId == 1) {
-            return new WorldChunkManagerHell(BiomeGenBase.sky, 0.0F);
-        }
-
-        // For mod dimensions, try to create a provider and get its chunk manager type
         try {
             WorldProvider provider = DimensionManager.createProviderFor(dimensionId);
             if (provider != null) {
@@ -109,14 +134,17 @@ public record DimensionInfo(int dimensionId, String displayName) {
 
     /**
      * Try to get the WorldChunkManager from a loaded server world.
-     * This supports mod-added biomes (e.g. Biomes O' Plenty Nether biomes).
+     * Only returns it if the seed and world type match the request,
+     * so that switching world type in preview creates a fresh WCM.
      */
-    private WorldChunkManager getChunkManagerFromServer() {
+    private WorldChunkManager getChunkManagerFromServer(long seed, net.minecraft.world.WorldType worldType) {
         try {
             MinecraftServer server = MinecraftServer.getServer();
             if (server == null) return null;
             WorldServer world = DimensionManager.getWorld(dimensionId);
-            if (world != null) {
+            if (world != null && world.getSeed() == seed
+                && world.getWorldInfo()
+                    .getTerrainType() == worldType) {
                 WorldChunkManager wcm = world.getWorldChunkManager();
                 if (wcm != null) {
                     return wcm;

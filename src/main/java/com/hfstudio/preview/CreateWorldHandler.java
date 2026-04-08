@@ -130,8 +130,9 @@ public class CreateWorldHandler {
 
         // Open the preview screen with the create world screen as parent
         String displaySeedStr = MathHelper.stringNullOrLengthZero(seedStr) ? String.valueOf(seed) : seedStr;
+        String generatorOptions = screen.field_146334_a != null ? screen.field_146334_a : "";
         Minecraft.getMinecraft()
-            .displayGuiScreen(new GuiWorldPreview(screen, seed, displaySeedStr, worldType));
+            .displayGuiScreen(new GuiWorldPreview(screen, seed, displaySeedStr, worldType, generatorOptions));
     }
 
     private void handleIngamePreview(net.minecraft.client.gui.GuiScreen pauseMenu) {
@@ -145,12 +146,23 @@ public class CreateWorldHandler {
         if (worldType == null) {
             worldType = WorldType.DEFAULT;
         }
+        String genOptions = server.worldServers[0].getWorldInfo()
+            .getGeneratorOptions();
 
         // Center on player position and match player dimension
         int playerX = MathHelper.floor_double(mc.thePlayer.posX);
         int playerZ = MathHelper.floor_double(mc.thePlayer.posZ);
         int playerDim = mc.thePlayer.dimension;
 
-        mc.displayGuiScreen(new GuiWorldPreview(pauseMenu, seed, worldType, playerX, playerZ, playerDim));
+        mc.displayGuiScreen(
+            new GuiWorldPreview(
+                pauseMenu,
+                seed,
+                String.valueOf(seed),
+                worldType,
+                genOptions,
+                playerX,
+                playerZ,
+                playerDim));
     }
 }

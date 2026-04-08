@@ -37,6 +37,7 @@ public class BiomeSampler {
     private WorldType currentWorldType;
     @Getter
     private int currentDimensionId = 0;
+    private String currentGeneratorOptions = "";
     private int currentBlocksPerPixel = -1;
 
     // Thread pool for parallel tile generation
@@ -57,25 +58,32 @@ public class BiomeSampler {
     // Generation tracking
     private final AtomicBoolean generationActive = new AtomicBoolean(false);
     private final AtomicInteger pendingTiles = new AtomicInteger(0);
-    private volatile boolean cancelled = false;
+    private final AtomicInteger generationEpoch = new AtomicInteger(0);
     private final List<Future<?>> activeFutures = Collections.synchronizedList(new ArrayList<>());
 
     public void setup(long seed, WorldType worldType) {
-        setup(seed, worldType, 0);
+        setup(seed, worldType, 0, "");
     }
 
     public void setup(long seed, WorldType worldType, int dimensionId) {
+        setup(seed, worldType, dimensionId, "");
+    }
+
+    public void setup(long seed, WorldType worldType, int dimensionId, String generatorOptions) {
+        String opts = generatorOptions != null ? generatorOptions : "";
         if (seed == currentSeed && worldType == currentWorldType
             && dimensionId == currentDimensionId
+            && opts.equals(currentGeneratorOptions)
             && chunkManager != null) {
             return;
         }
         this.currentSeed = seed;
         this.currentWorldType = worldType;
         this.currentDimensionId = dimensionId;
+        this.currentGeneratorOptions = opts;
         this.currentBlocksPerPixel = -1;
         DimensionInfo dimInfo = new DimensionInfo(dimensionId, "");
-        this.chunkManager = dimInfo.createChunkManager(seed, worldType);
+        this.chunkManager = dimInfo.createChunkManager(seed, worldType, opts);
         clearCache();
     }
 
@@ -175,7 +183,7 @@ public class BiomeSampler {
             });
 
             generationActive.set(true);
-            cancelled = false;
+            final int epoch = generationEpoch.incrementAndGet();
             pendingTiles.set(missingTiles.size());
 
             // Capture viewport params for re-composition after each tile completes
@@ -197,13 +205,13 @@ public class BiomeSampler {
                 Future<?> f = executor.submit(() -> {
                     // Clear any stale interrupt flag from previous cancellation
                     Thread.interrupted();
-                    if (cancelled) return;
+                    if (generationEpoch.get() != epoch) return;
                     int maxRetries = 3;
                     for (int attempt = 1; attempt <= maxRetries; attempt++) {
-                        if (cancelled) return;
+                        if (generationEpoch.get() != epoch) return;
                         try {
-                            int[] tileData = generateTile(tX, tZ, fBlocksPerPixel);
-                            if (!cancelled) {
+                            int[] tileData = generateTile(tX, tZ, fBlocksPerPixel, epoch);
+                            if (generationEpoch.get() == epoch) {
                                 tileCache.put(tKey, tileData);
 
                                 // Recompose the full output from all relevant cached tiles
@@ -224,7 +232,7 @@ public class BiomeSampler {
                             }
                             break; // success, exit retry loop
                         } catch (Exception e) {
-                            if (e instanceof InterruptedException || cancelled) {
+                            if (e instanceof InterruptedException || generationEpoch.get() != epoch) {
                                 break;
                             }
                             if (attempt < maxRetries) {
@@ -250,7 +258,7 @@ public class BiomeSampler {
     /**
      * Generate a single tile's biome data.
      */
-    private int[] generateTile(int tileX, int tileZ, int blocksPerPixel) {
+    private int[] generateTile(int tileX, int tileZ, int blocksPerPixel, int epoch) {
         int[] result = new int[TILE_SIZE * TILE_SIZE];
         int tileBlockSize = TILE_SIZE * blocksPerPixel;
         int worldX = tileX * tileBlockSize;
@@ -263,7 +271,7 @@ public class BiomeSampler {
 
         BiomeGenBase[] rowBuffer = null;
         for (int py = 0; py < TILE_SIZE; py++) {
-            if (cancelled || Thread.currentThread()
+            if (generationEpoch.get() != epoch || Thread.currentThread()
                 .isInterrupted()) return result;
 
             int quartZ = startQuartZ + py * quartsPerPixel;
@@ -338,7 +346,7 @@ public class BiomeSampler {
     }
 
     private void cancelPending() {
-        cancelled = true;
+        generationEpoch.incrementAndGet();
         synchronized (activeFutures) {
             for (Future<?> f : activeFutures) {
                 f.cancel(true);
