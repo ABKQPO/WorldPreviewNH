@@ -15,7 +15,12 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 
-@Mod(modid = MODID, version = Tags.VERSION, name = MODNAME, acceptedMinecraftVersions = "1.7.10")
+@Mod(
+    modid = MODID,
+    version = Tags.VERSION,
+    name = MODNAME,
+    acceptableRemoteVersions = "*",
+    acceptedMinecraftVersions = "1.7.10")
 public class WorldPreviewNH {
 
     @Mod.Instance(Tags.MODID)

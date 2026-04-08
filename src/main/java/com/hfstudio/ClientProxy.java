@@ -3,11 +3,16 @@ package com.hfstudio;
 import net.minecraftforge.common.MinecraftForge;
 
 import com.hfstudio.preview.CreateWorldHandler;
+import com.hfstudio.preview.SelectWorldHandler;
+import com.hfstudio.preview.network.ServerSeedData;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.network.FMLNetworkEvent;
 
 public class ClientProxy extends CommonProxy {
 
@@ -15,6 +20,15 @@ public class ClientProxy extends CommonProxy {
     public void init(FMLInitializationEvent event) {
         super.init(event);
         MinecraftForge.EVENT_BUS.register(new CreateWorldHandler());
+        MinecraftForge.EVENT_BUS.register(new SelectWorldHandler());
+        FMLCommonHandler.instance()
+            .bus()
+            .register(this);
+    }
+
+    @SubscribeEvent
+    public void onClientDisconnect(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
+        ServerSeedData.clear();
     }
 
     @Override

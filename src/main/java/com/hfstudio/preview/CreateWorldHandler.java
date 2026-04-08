@@ -8,8 +8,11 @@ import net.minecraft.client.gui.GuiCreateWorld;
 import net.minecraft.client.gui.GuiIngameMenu;
 import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.WorldType;
 import net.minecraftforge.client.event.GuiScreenEvent;
+
+import com.hfstudio.preview.network.ServerSeedData;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
@@ -66,8 +69,8 @@ public class CreateWorldHandler {
         ingamePreviewButton = null;
         Minecraft mc = Minecraft.getMinecraft();
 
-        // Only show in singleplayer
-        if (!mc.isSingleplayer()) return;
+        // Only show in singleplayer or when server has the mod installed
+        if (!mc.isSingleplayer() && !ServerSeedData.isAvailable()) return;
 
         // Find the Statistics button (ID 7)
         GuiButton statsButton = null;
@@ -95,6 +98,34 @@ public class CreateWorldHandler {
         // Sync preview button visibility with World Type button (both hidden when "More World Options" is collapsed)
         if (worldTypeButton != null && previewButton != null) {
             previewButton.visible = worldTypeButton.visible;
+        }
+    }
+
+    @SubscribeEvent
+    public void onDrawScreenPost(GuiScreenEvent.DrawScreenEvent.Post event) {
+        Minecraft mc = Minecraft.getMinecraft();
+        String tooltip = StatCollector.translateToLocal("worldpreview.button.tooltip");
+
+        if (event.gui instanceof GuiCreateWorld) {
+            if (previewButton != null && previewButton.isHovered()) {
+                GuiPreviewButton.drawVanillaTooltip(
+                    mc.fontRenderer,
+                    tooltip,
+                    event.mouseX,
+                    event.mouseY,
+                    event.gui.width,
+                    event.gui.height);
+            }
+        } else if (event.gui instanceof GuiIngameMenu) {
+            if (ingamePreviewButton instanceof GuiPreviewButton btn && btn.isHovered()) {
+                GuiPreviewButton.drawVanillaTooltip(
+                    mc.fontRenderer,
+                    tooltip,
+                    event.mouseX,
+                    event.mouseY,
+                    event.gui.width,
+                    event.gui.height);
+            }
         }
     }
 
@@ -137,17 +168,31 @@ public class CreateWorldHandler {
 
     private void handleIngamePreview(net.minecraft.client.gui.GuiScreen pauseMenu) {
         Minecraft mc = Minecraft.getMinecraft();
-        IntegratedServer server = mc.getIntegratedServer();
-        if (server == null || server.worldServers == null || server.worldServers.length == 0) return;
 
-        long seed = server.worldServers[0].getSeed();
-        WorldType worldType = server.worldServers[0].getWorldInfo()
-            .getTerrainType();
+        long seed;
+        WorldType worldType;
+        String genOptions;
+
+        if (mc.isSingleplayer()) {
+            IntegratedServer server = mc.getIntegratedServer();
+            if (server == null || server.worldServers == null || server.worldServers.length == 0) return;
+
+            seed = server.worldServers[0].getSeed();
+            worldType = server.worldServers[0].getWorldInfo()
+                .getTerrainType();
+            genOptions = server.worldServers[0].getWorldInfo()
+                .getGeneratorOptions();
+        } else if (ServerSeedData.isAvailable()) {
+            seed = ServerSeedData.getSeed();
+            worldType = ServerSeedData.getWorldType();
+            genOptions = ServerSeedData.getGeneratorOptions();
+        } else {
+            return;
+        }
+
         if (worldType == null) {
             worldType = WorldType.DEFAULT;
         }
-        String genOptions = server.worldServers[0].getWorldInfo()
-            .getGeneratorOptions();
 
         // Center on player position and match player dimension
         int playerX = MathHelper.floor_double(mc.thePlayer.posX);
