@@ -144,21 +144,21 @@ public class GuiWorldPreview extends GuiScreen {
     private boolean dimPopupVisible = false;
 
     // Toolbar button IDs
-    private static final int ID_SETTINGS = 100;
-    private static final int ID_CAVES = 101;
-    private static final int ID_HOME = 102;
-    private static final int ID_HEIGHTMAP = 103;
-    private static final int ID_INTERSECTIONS = 104;
-    private static final int ID_REFRESH = 105;
-    private static final int ID_SAVE_SEED = 106;
-    private static final int ID_DELETE_SEED = 107;
-    private static final int ID_TAB_BIOMES = 108;
-    private static final int ID_TAB_SEEDS = 109;
-    private static final int ID_BACK = 110;
-    private static final int ID_GOTO = 111;
-    private static final int ID_RANDOM_SEED = 112;
-    private static final int ID_WORLD_TYPE = 113;
-    private static final int ID_DIMENSION = 114;
+    private static final int ID_SETTINGS = 1000;
+    private static final int ID_CAVES = 1001;
+    private static final int ID_HOME = 1002;
+    private static final int ID_HEIGHTMAP = 1003;
+    private static final int ID_INTERSECTIONS = 1004;
+    private static final int ID_REFRESH = 1005;
+    private static final int ID_SAVE_SEED = 1006;
+    private static final int ID_DELETE_SEED = 1007;
+    private static final int ID_TAB_BIOMES = 1008;
+    private static final int ID_TAB_SEEDS = 1009;
+    private static final int ID_BACK = 1010;
+    private static final int ID_GOTO = 1011;
+    private static final int ID_RANDOM_SEED = 1012;
+    private static final int ID_WORLD_TYPE = 1013;
+    private static final int ID_DIMENSION = 1014;
 
     public GuiWorldPreview(GuiScreen parent, long seed, WorldType worldType) {
         this(parent, seed, String.valueOf(seed), worldType, "", 0, 0, 0);
