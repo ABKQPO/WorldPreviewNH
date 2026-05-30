@@ -1,6 +1,7 @@
 package com.hfstudio.preview.handler;
 
-import java.util.Random;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -27,10 +28,15 @@ public class CreateWorldHandler {
 
     private static final int PREVIEW_BUTTON_ID = -161520;
     private static final int INGAME_PREVIEW_BUTTON_ID = -161521;
+    private static final int CREATE_WORLD_UI_PREVIEW_TAB_ID = 103;
+    private static final String TAB_MANAGER_FIELD_NAME = "modernWorldCreatingUI$tabManager";
+    private static final String SWITCH_TO_TAB_METHOD_NAME = "switchToTab";
 
     private GuiButton worldTypeButton;
     private GuiPreviewButton previewButton;
     private GuiButton ingamePreviewButton;
+    private final CreateWorldScreenAdapter vanillaAdapter = new VanillaCreateWorldScreenAdapter();
+    private final CreateWorldUiScreenAdapter createWorldUiAdapter = new CreateWorldUiScreenAdapter();
 
     @SubscribeEvent
     public void onInitGui(GuiScreenEvent.InitGuiEvent.Post event) {
@@ -45,23 +51,15 @@ public class CreateWorldHandler {
     private void initCreateWorldButton(GuiScreenEvent.InitGuiEvent.Post event) {
         worldTypeButton = null;
         previewButton = null;
-
-        // Find the World Type button (ID 5)
-        for (Object obj : event.buttonList) {
-            GuiButton btn = (GuiButton) obj;
-            if (btn.id == 5) {
-                worldTypeButton = btn;
-                break;
+        GuiCreateWorld screen = (GuiCreateWorld) event.gui;
+        CreateWorldScreenAdapter adapter = getAdapter(screen);
+        GuiButton anchorButton = adapter.findAnchorButton(screen, event.buttonList);
+        if (anchorButton != null) {
+            if (adapter == vanillaAdapter) {
+                worldTypeButton = anchorButton;
             }
-        }
-
-        if (worldTypeButton != null) {
-            // Place 16x16 button to the right of World Type button, vertically centered
-            int btnX = worldTypeButton.xPosition + worldTypeButton.width + 4;
-            int btnY = worldTypeButton.yPosition + (worldTypeButton.height - 20) / 2;
-
-            previewButton = new GuiPreviewButton(PREVIEW_BUTTON_ID, btnX, btnY);
-            previewButton.visible = worldTypeButton.visible;
+            previewButton = new GuiPreviewButton(PREVIEW_BUTTON_ID, anchorButton.xPosition, anchorButton.yPosition);
+            adapter.updatePreviewButton(screen, previewButton, event.buttonList);
             event.buttonList.add(previewButton);
         }
     }
@@ -96,10 +94,17 @@ public class CreateWorldHandler {
     @SubscribeEvent
     public void onDrawScreen(GuiScreenEvent.DrawScreenEvent.Pre event) {
         if (!(event.gui instanceof GuiCreateWorld)) return;
+        GuiCreateWorld screen = (GuiCreateWorld) event.gui;
+        CreateWorldScreenAdapter adapter = getAdapter(screen);
+        if (adapter != vanillaAdapter) {
+            return;
+        }
 
-        // Sync preview button visibility with World Type button (both hidden when "More World Options" is collapsed)
         if (worldTypeButton != null && previewButton != null) {
+            previewButton.xPosition = worldTypeButton.xPosition + worldTypeButton.width + 4;
+            previewButton.yPosition = worldTypeButton.yPosition + (worldTypeButton.height - previewButton.height) / 2;
             previewButton.visible = worldTypeButton.visible;
+            previewButton.enabled = worldTypeButton.enabled;
         }
     }
 
@@ -109,6 +114,10 @@ public class CreateWorldHandler {
         String tooltip = StatCollector.translateToLocal("worldpreview.button.tooltip");
 
         if (event.gui instanceof GuiCreateWorld) {
+            GuiCreateWorld screen = (GuiCreateWorld) event.gui;
+            if (getAdapter(screen) != vanillaAdapter) {
+                return;
+            }
             if (previewButton != null && previewButton.isHovered()) {
                 GuiPreviewButton.drawVanillaTooltip(
                     mc.fontRenderer,
@@ -133,6 +142,12 @@ public class CreateWorldHandler {
 
     @SubscribeEvent
     public void onActionPerformed(GuiScreenEvent.ActionPerformedEvent.Post event) {
+        if (event.gui instanceof GuiCreateWorld && createWorldUiAdapter.shouldHandle((GuiCreateWorld) event.gui)) {
+            if (event.button.id == CREATE_WORLD_UI_PREVIEW_TAB_ID) {
+                switchCreateWorldUiTab((GuiCreateWorld) event.gui, CREATE_WORLD_UI_PREVIEW_TAB_ID);
+            }
+            return;
+        }
         if (event.gui instanceof GuiCreateWorld && event.button.id == PREVIEW_BUTTON_ID) {
             handleCreateWorldPreview((GuiCreateWorld) event.gui);
         } else if (event.gui instanceof GuiIngameMenu && event.button.id == INGAME_PREVIEW_BUTTON_ID) {
@@ -141,31 +156,45 @@ public class CreateWorldHandler {
     }
 
     private void handleCreateWorldPreview(GuiCreateWorld screen) {
-        // Parse the seed from the text field (same logic as vanilla world creation)
-        String seedStr = screen.field_146335_h.getText();
-        long seed;
-        if (!MathHelper.stringNullOrLengthZero(seedStr)) {
-            try {
-                seed = Long.parseLong(seedStr);
-            } catch (NumberFormatException e) {
-                seed = seedStr.hashCode();
-            }
-        } else {
-            seed = new Random().nextLong();
-        }
-
-        // Read the selected world type
-        int worldTypeIndex = screen.field_146331_K;
-        WorldType worldType = WorldType.worldTypes[worldTypeIndex];
-        if (worldType == null) {
-            worldType = WorldType.DEFAULT;
-        }
-
-        // Open the preview screen with the create world screen as parent
-        String displaySeedStr = MathHelper.stringNullOrLengthZero(seedStr) ? String.valueOf(seed) : seedStr;
-        String generatorOptions = screen.field_146334_a != null ? screen.field_146334_a : "";
+        CreateWorldPreviewContext context = getAdapter(screen).createPreviewContext(screen);
         Minecraft.getMinecraft()
-            .displayGuiScreen(new GuiWorldPreview(screen, seed, displaySeedStr, worldType, generatorOptions));
+            .displayGuiScreen(
+                new GuiWorldPreview(
+                    screen,
+                    context.seed(),
+                    context.displaySeed(),
+                    context.worldType(),
+                    context.generatorOptions()));
+    }
+
+    private CreateWorldScreenAdapter getAdapter(GuiCreateWorld screen) {
+        return createWorldUiAdapter.shouldHandle(screen) ? createWorldUiAdapter : vanillaAdapter;
+    }
+
+    private void switchCreateWorldUiTab(GuiCreateWorld screen, int tabId) {
+        Object tabManager = readField(screen, TAB_MANAGER_FIELD_NAME);
+        if (tabManager == null) {
+            return;
+        }
+        try {
+            Method switchToTab = tabManager.getClass()
+                .getMethod(SWITCH_TO_TAB_METHOD_NAME, int.class);
+            switchToTab.invoke(tabManager, tabId);
+        } catch (ReflectiveOperationException ignored) {}
+    }
+
+    private Object readField(Object target, String fieldName) {
+        Class<?> currentClass = target.getClass();
+        while (currentClass != null) {
+            try {
+                Field field = currentClass.getDeclaredField(fieldName);
+                field.setAccessible(true);
+                return field.get(target);
+            } catch (ReflectiveOperationException ignored) {
+                currentClass = currentClass.getSuperclass();
+            }
+        }
+        return null;
     }
 
     private void handleIngamePreview(net.minecraft.client.gui.GuiScreen pauseMenu) {

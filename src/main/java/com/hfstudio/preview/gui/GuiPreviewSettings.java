@@ -15,6 +15,7 @@ public class GuiPreviewSettings extends GuiScreen {
 
     private final GuiWorldPreview parent;
     private final PreviewSettings settings;
+    private final GuiScreen returnScreen;
 
     // Button IDs
     private static final int BTN_DONE = 0;
@@ -27,6 +28,13 @@ public class GuiPreviewSettings extends GuiScreen {
     public GuiPreviewSettings(GuiWorldPreview parent, PreviewSettings settings) {
         this.parent = parent;
         this.settings = settings;
+        this.returnScreen = parent;
+    }
+
+    public GuiPreviewSettings(GuiScreen returnScreen, PreviewSettings settings) {
+        this.parent = null;
+        this.settings = settings;
+        this.returnScreen = returnScreen;
     }
 
     @Override
@@ -91,7 +99,7 @@ public class GuiPreviewSettings extends GuiScreen {
     protected void actionPerformed(GuiButton button) {
         switch (button.id) {
             case BTN_DONE:
-                mc.displayGuiScreen(parent);
+                mc.displayGuiScreen(returnScreen);
                 break;
             case BTN_HEIGHT_SAMPLING:
                 settings.heightSampling = !settings.heightSampling;

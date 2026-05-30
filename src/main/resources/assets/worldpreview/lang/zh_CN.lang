@@ -23,6 +23,7 @@ worldpreview.ingame.preview=世界预览
 # 选项卡
 worldpreview.tab.biomes=群系
 worldpreview.tab.seeds=种子
+worldpreview.tab.preview=预览
 
 # 工具栏提示
 worldpreview.tooltip.settings=设置

@@ -43,6 +43,13 @@ public class GuiWorldPreview extends GuiScreen {
     private int worldTypeIndex;
     private String seedText;
     private String generatorOptions = "";
+    private boolean embeddedMode = false;
+    private int embeddedLeft = 0;
+    private int embeddedTop = 0;
+    private int embeddedRight = 0;
+    private int embeddedBottom = 0;
+    private GuiScreen embeddedReturnScreen;
+    private boolean embeddedShowBottomControls = false;
 
     private BiomeSampler sampler;
     private DynamicTexture mapTexture;
@@ -55,6 +62,7 @@ public class GuiWorldPreview extends GuiScreen {
     private static final int TAB_BAR_HEIGHT = 20;
     private static final int SEED_BAR_HEIGHT = 24;
     private static final int PADDING = 2;
+    private static final int EMBEDDED_BOTTOM_CONTROL_OFFSET = 5;
     private static final int MIN_BLOCKS_PER_PIXEL = 1;
     private static final int MAX_BLOCKS_PER_PIXEL = 2048;
 
@@ -207,32 +215,21 @@ public class GuiWorldPreview extends GuiScreen {
         }
 
         // Left panel layout
-        panelX = PADDING;
-        panelY = PADDING;
+        panelX = embeddedMode ? embeddedLeft + PADDING : PADDING;
+        panelY = embeddedMode ? embeddedTop + PADDING : PADDING;
         panelWidth = LEFT_PANEL_WIDTH;
-        panelBottom = this.height - 26;
+        panelBottom = embeddedMode ? embeddedBottom - 5 : this.height - 26;
 
         // Map display area: right of left panel
         mapX = panelX + panelWidth + PADDING;
-        mapY = PADDING;
-        mapWidth = this.width - mapX - PADDING;
-        mapHeight = this.height - PADDING * 2 - 24;
+        mapY = embeddedMode ? embeddedTop + PADDING : PADDING;
+        mapWidth = embeddedMode ? embeddedRight - mapX - PADDING : this.width - mapX - PADDING;
+        mapHeight = embeddedMode ? embeddedBottom - mapY - PADDING : this.height - PADDING * 2 - 24;
 
         if (mapWidth < 10) mapWidth = 10;
         if (mapHeight < 10) mapHeight = 10;
 
-        // (Re)create map texture
-        if (mapTextureLocation != null) {
-            mc.getTextureManager()
-                .deleteTexture(mapTextureLocation);
-        }
-        mapTexture = new DynamicTexture(mapWidth, mapHeight);
-        mapTextureLocation = mc.getTextureManager()
-            .getDynamicTextureLocation("worldpreview_map", mapTexture);
-
-        int[] pixels = mapTexture.getTextureData();
-        Arrays.fill(pixels, 0xFF000000);
-        mapTexture.updateDynamicTexture();
+        ensureMapTexture();
 
         // Initialize sampler
         if (sampler == null) {
@@ -339,33 +336,41 @@ public class GuiWorldPreview extends GuiScreen {
 
         // Adjust biome list top to accommodate search field
         int biomeListTop = searchFieldY + searchFieldHeight + 2;
-        biomeList = new BiomeListSlot(this, panelWidth, this.height, biomeListTop, listBottom);
-        seedList = new SeedListSlot(this, panelWidth, this.height, listTop, listBottom);
+        int listScreenHeight = embeddedMode ? Math.max(listBottom + 1, embeddedBottom) : this.height;
+        biomeList = new BiomeListSlot(this, panelWidth, listScreenHeight, biomeListTop, listBottom);
+        seedList = new SeedListSlot(this, panelWidth, listScreenHeight, listTop, listBottom);
 
         // Bottom buttons (centered as a group: 70 + 4 + 70 + 4 + 130 + 4 + 120 = 402)
-        int bottomY = this.height - 24;
-        int totalBottomWidth = 70 + 4 + 70 + 4 + 130 + 4 + 120;
-        int bottomStartX = (this.width - totalBottomWidth) / 2;
-        btnBack = new GuiButton(
-            ID_BACK,
-            bottomStartX,
-            bottomY,
-            70,
-            20,
-            StatCollector.translateToLocal("worldpreview.gui.back"));
-        btnGoto = new GuiButton(
-            ID_GOTO,
-            bottomStartX + 74,
-            bottomY,
-            70,
-            20,
-            StatCollector.translateToLocal("worldpreview.goto.title"));
-        btnWorldType = new GuiButton(ID_WORLD_TYPE, bottomStartX + 148, bottomY, 130, 20, getWorldTypeButtonText());
-        btnDimension = new GuiButton(ID_DIMENSION, bottomStartX + 282, bottomY, 120, 20, getDimensionButtonText());
-        this.buttonList.add(btnBack);
-        this.buttonList.add(btnGoto);
-        this.buttonList.add(btnWorldType);
-        this.buttonList.add(btnDimension);
+        if (!embeddedMode || embeddedShowBottomControls) {
+            int bottomY = embeddedMode ? embeddedBottom - 24 - EMBEDDED_BOTTOM_CONTROL_OFFSET : this.height - 24;
+            int totalBottomWidth = 70 + 4 + 70 + 4 + 130 + 4 + 120;
+            int bottomStartX = (this.width - totalBottomWidth) / 2;
+            btnBack = new GuiButton(
+                ID_BACK,
+                bottomStartX,
+                bottomY,
+                70,
+                20,
+                StatCollector.translateToLocal("worldpreview.gui.back"));
+            btnGoto = new GuiButton(
+                ID_GOTO,
+                bottomStartX + 74,
+                bottomY,
+                70,
+                20,
+                StatCollector.translateToLocal("worldpreview.goto.title"));
+            btnWorldType = new GuiButton(ID_WORLD_TYPE, bottomStartX + 148, bottomY, 130, 20, getWorldTypeButtonText());
+            btnDimension = new GuiButton(ID_DIMENSION, bottomStartX + 282, bottomY, 120, 20, getDimensionButtonText());
+            this.buttonList.add(btnBack);
+            this.buttonList.add(btnGoto);
+            this.buttonList.add(btnWorldType);
+            this.buttonList.add(btnDimension);
+        } else {
+            btnBack = null;
+            btnGoto = null;
+            btnWorldType = null;
+            btnDimension = null;
+        }
 
         requestViewportUpdate();
     }
@@ -382,7 +387,9 @@ public class GuiWorldPreview extends GuiScreen {
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        this.drawDefaultBackground();
+        if (!embeddedMode) {
+            this.drawDefaultBackground();
+        }
 
         // Update texture if new tile data is available
         if (textureNeedsUpdate) {
@@ -850,7 +857,9 @@ public class GuiWorldPreview extends GuiScreen {
             return;
         }
         if (key == Keyboard.KEY_ESCAPE) {
-            mc.displayGuiScreen(parentScreen);
+            if (!embeddedMode) {
+                mc.displayGuiScreen(parentScreen);
+            }
         }
     }
 
@@ -897,6 +906,14 @@ public class GuiWorldPreview extends GuiScreen {
             biomeList.setFilter("");
         }
         seedField.mouseClicked(mouseX, mouseY, mouseButton);
+        if (mouseButton == 1 && mouseX >= seedField.xPosition
+            && mouseX < seedField.xPosition + seedField.width
+            && mouseY >= seedField.yPosition
+            && mouseY < seedField.yPosition + seedField.height) {
+            seedField.setText("");
+            seedText = "";
+            return;
+        }
 
         // Right-click on map: copy coordinates
         if (mouseButton == 1 && isInMap(mouseX, mouseY)) {
@@ -1040,7 +1057,9 @@ public class GuiWorldPreview extends GuiScreen {
     protected void actionPerformed(GuiButton button) {
         switch (button.id) {
             case ID_BACK:
-                mc.displayGuiScreen(parentScreen);
+                if (!embeddedMode) {
+                    mc.displayGuiScreen(parentScreen);
+                }
                 break;
 
             case ID_GOTO:
@@ -1048,7 +1067,10 @@ public class GuiWorldPreview extends GuiScreen {
                 break;
 
             case ID_SETTINGS:
-                mc.displayGuiScreen(new GuiPreviewSettings(this, settings));
+                mc.displayGuiScreen(
+                    embeddedMode && embeddedReturnScreen != null
+                        ? new GuiPreviewSettings(embeddedReturnScreen, settings)
+                        : new GuiPreviewSettings(this, settings));
                 break;
 
             case ID_HOME:
@@ -1206,7 +1228,9 @@ public class GuiWorldPreview extends GuiScreen {
             || !WorldType.worldTypes[worldTypeIndex].getCanBeCreated());
 
         worldType = WorldType.worldTypes[worldTypeIndex];
-        btnWorldType.displayString = getWorldTypeButtonText();
+        if (btnWorldType != null) {
+            btnWorldType.displayString = getWorldTypeButtonText();
+        }
         sampler.setup(seed, worldType, getCurrentDimensionId(), generatorOptions);
         sampler.clearCache();
         requestViewportUpdate();
@@ -1248,7 +1272,9 @@ public class GuiWorldPreview extends GuiScreen {
 
     private void applyDimension() {
         DimensionInfo dim = dimensionList.get(currentDimensionIndex);
-        btnDimension.displayString = getDimensionButtonText();
+        if (btnDimension != null) {
+            btnDimension.displayString = getDimensionButtonText();
+        }
         sampler.setup(seed, worldType, dim.dimensionId(), generatorOptions);
         sampler.clearCache();
         requestViewportUpdate();
@@ -1292,5 +1318,119 @@ public class GuiWorldPreview extends GuiScreen {
             () -> textureNeedsUpdate = true);
         // Immediately update texture from whatever cached data is available
         textureNeedsUpdate = true;
+    }
+
+    private void ensureMapTexture() {
+        boolean needsNewTexture = mapTexture == null || mapTextureLocation == null
+            || mapTexture.getTextureData().length != mapWidth * mapHeight;
+        if (needsNewTexture) {
+            if (mapTextureLocation != null) {
+                mc.getTextureManager()
+                    .deleteTexture(mapTextureLocation);
+            }
+            mapTexture = new DynamicTexture(mapWidth, mapHeight);
+            mapTextureLocation = mc.getTextureManager()
+                .getDynamicTextureLocation("worldpreview_map", mapTexture);
+        }
+
+        int[] pixels = mapTexture.getTextureData();
+        Arrays.fill(pixels, 0xFF000000);
+        mapTexture.updateDynamicTexture();
+    }
+
+    public GuiTextField getSeedField() {
+        return seedField;
+    }
+
+    public void initializeEmbedded(net.minecraft.client.Minecraft minecraft, int screenWidth, int screenHeight) {
+        embeddedMode = true;
+        embeddedReturnScreen = null;
+        embeddedShowBottomControls = false;
+        mc = minecraft;
+        width = screenWidth;
+        height = screenHeight;
+        fontRendererObj = minecraft.fontRenderer;
+        initGui();
+    }
+
+    public void initializeEmbedded(net.minecraft.client.Minecraft minecraft, int screenWidth, int screenHeight,
+        int left, int top, int right, int bottom) {
+        embeddedMode = true;
+        embeddedLeft = left;
+        embeddedTop = top;
+        embeddedRight = right;
+        embeddedBottom = bottom;
+        embeddedReturnScreen = null;
+        embeddedShowBottomControls = false;
+        mc = minecraft;
+        width = screenWidth;
+        height = screenHeight;
+        fontRendererObj = minecraft.fontRenderer;
+        initGui();
+    }
+
+    public void setEmbeddedReturnScreen(GuiScreen returnScreen) {
+        embeddedReturnScreen = returnScreen;
+    }
+
+    public void setEmbeddedShowBottomControls(boolean showBottomControls) {
+        embeddedShowBottomControls = showBottomControls;
+    }
+
+    public void cycleWorldTypeForward() {
+        cycleWorldType();
+    }
+
+    public void cycleDimensionNext() {
+        cycleDimensionForward();
+    }
+
+    public void cycleDimensionPrevious() {
+        cycleDimensionBackward();
+    }
+
+    public int getCurrentDimensionIdValue() {
+        return getCurrentDimensionId();
+    }
+
+    public String getCurrentDimensionButtonText() {
+        return getDimensionButtonText();
+    }
+
+    public void applyEmbeddedContext(long newSeed, String newSeedText, WorldType newWorldType,
+        String newGeneratorOptions) {
+        String normalizedSeedText = newSeedText != null ? newSeedText : "";
+        String normalizedGeneratorOptions = newGeneratorOptions != null ? newGeneratorOptions : "";
+        boolean seedChanged = seed != newSeed || !seedText.equals(normalizedSeedText);
+        boolean worldTypeChanged = worldType != newWorldType;
+        boolean generatorOptionsChanged = !generatorOptions.equals(normalizedGeneratorOptions);
+
+        seed = newSeed;
+        seedText = normalizedSeedText;
+        worldType = newWorldType;
+        generatorOptions = normalizedGeneratorOptions;
+
+        if (seedField != null && !seedField.getText()
+            .equals(normalizedSeedText)) {
+            seedField.setText(normalizedSeedText);
+        }
+
+        int resolvedWorldTypeIndex = 0;
+        for (int i = 0; i < WorldType.worldTypes.length; i++) {
+            if (WorldType.worldTypes[i] == newWorldType) {
+                resolvedWorldTypeIndex = i;
+                break;
+            }
+        }
+        worldTypeIndex = resolvedWorldTypeIndex;
+
+        if (seedChanged || worldTypeChanged || generatorOptionsChanged) {
+            sampler.setup(seed, worldType, getCurrentDimensionId(), generatorOptions);
+            highlightedBiomeId = -1;
+            if (biomeList != null) {
+                biomeList.clearSelection();
+            }
+            requestViewportUpdate();
+        }
     }
 }

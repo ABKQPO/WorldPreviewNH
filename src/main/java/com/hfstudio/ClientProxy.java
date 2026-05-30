@@ -4,6 +4,7 @@ import net.minecraftforge.common.MinecraftForge;
 
 import com.hfstudio.preview.handler.CreateWorldHandler;
 import com.hfstudio.preview.handler.SelectWorldHandler;
+import com.hfstudio.preview.integration.createworldui.CreateWorldUiCompat;
 import com.hfstudio.preview.network.ServerSeedData;
 
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -16,9 +17,12 @@ import cpw.mods.fml.common.network.FMLNetworkEvent;
 
 public class ClientProxy extends CommonProxy {
 
+    private final CreateWorldUiCompat createWorldUiCompat = new CreateWorldUiCompat();
+
     @Override
     public void init(FMLInitializationEvent event) {
         super.init(event);
+        createWorldUiCompat.registerPreviewTabIfAvailable();
         MinecraftForge.EVENT_BUS.register(new CreateWorldHandler());
         MinecraftForge.EVENT_BUS.register(new SelectWorldHandler());
         FMLCommonHandler.instance()

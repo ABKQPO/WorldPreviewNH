@@ -23,6 +23,7 @@ worldpreview.ingame.preview=World Preview
 # Tabs
 worldpreview.tab.biomes=Biomes
 worldpreview.tab.seeds=Seeds
+worldpreview.tab.preview=Preview
 
 # Toolbar Tooltips
 worldpreview.tooltip.settings=Settings
