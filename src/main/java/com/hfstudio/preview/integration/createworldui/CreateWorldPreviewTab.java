@@ -13,8 +13,9 @@ import net.minecraft.world.WorldType;
 import com.hfstudio.preview.data.DimensionInfo;
 import com.hfstudio.preview.gui.EmbeddedWorldPreview;
 
-import decok.dfcdvadstf.createworldui.api.tab.AbstractScreenTab;
-import decok.dfcdvadstf.createworldui.api.tab.TabManager;
+import decok.dfcdvadstf.catframe.ui.tab.AbstractScreenTab;
+import decok.dfcdvadstf.catframe.ui.tab.TabManager;
+import decok.dfcdvadstf.createworldui.mixin.access.IGuiCreateWorldAccess;
 
 /**
  * Embedded preview tab for CreateWorldUI.
@@ -42,6 +43,8 @@ public class CreateWorldPreviewTab extends AbstractScreenTab {
     private final List<DimensionInfo> dimensionList = DimensionInfo.getAllDimensions();
     private String lastSeedText = "";
     private int lastWorldTypeIndex = Integer.MIN_VALUE;
+    private GuiCreateWorld guiCreateWorld;
+    private IGuiCreateWorldAccess access;
     private GuiButton gotoButton;
     private GuiButton worldTypeButton;
     private GuiButton dimensionButton;
@@ -55,6 +58,8 @@ public class CreateWorldPreviewTab extends AbstractScreenTab {
     @Override
     public void initGui(TabManager tabManager, int width, int height) {
         super.initGui(tabManager, width, height);
+        guiCreateWorld = (GuiCreateWorld) tabManager.getScreen();
+        access = (IGuiCreateWorldAccess) guiCreateWorld;
         initControlButtons(width, height);
         rebuildPreview();
         setVisible(false);
@@ -81,7 +86,7 @@ public class CreateWorldPreviewTab extends AbstractScreenTab {
         }
         if (button == worldTypeButton) {
             int nextWorldTypeIndex = findNextWorldTypeIndex(lastWorldTypeIndex);
-            tabManager.setWorldTypeIndex(nextWorldTypeIndex);
+            access.modernWorldCreatingUI$setWorldTypeIndex(nextWorldTypeIndex);
             updatePreviewContext(resolveSeedText(), nextWorldTypeIndex);
             return;
         }
@@ -105,7 +110,7 @@ public class CreateWorldPreviewTab extends AbstractScreenTab {
         if (mouseButton == 1) {
             if (isOverButton(worldTypeButton, mouseX, mouseY)) {
                 int previousWorldTypeIndex = findPreviousWorldTypeIndex(lastWorldTypeIndex);
-                tabManager.setWorldTypeIndex(previousWorldTypeIndex);
+                access.modernWorldCreatingUI$setWorldTypeIndex(previousWorldTypeIndex);
                 updatePreviewContext(resolveSeedText(), previousWorldTypeIndex);
                 return;
             }
@@ -145,7 +150,7 @@ public class CreateWorldPreviewTab extends AbstractScreenTab {
 
     private void refreshPreviewIfNeeded() {
         String currentSeedText = resolveSeedText();
-        int currentWorldTypeIndex = getWorldTypeIndex();
+        int currentWorldTypeIndex = access.modernWorldCreatingUI$getWorldTypeIndex();
         if (!currentSeedText.equals(lastSeedText) || currentWorldTypeIndex != lastWorldTypeIndex) {
             updatePreviewContext(currentSeedText, currentWorldTypeIndex);
         }
@@ -157,20 +162,21 @@ public class CreateWorldPreviewTab extends AbstractScreenTab {
         }
         String seedText = resolveSeedText();
         long seed = parseSeed(seedText);
-        WorldType worldType = resolveWorldType(getWorldTypeIndex());
-        embeddedPreview = new EmbeddedWorldPreview(tabManager.getParent(), seed, seedText, worldType, "");
+        int worldTypeIndex = access.modernWorldCreatingUI$getWorldTypeIndex();
+        WorldType worldType = resolveWorldType(worldTypeIndex);
+        embeddedPreview = new EmbeddedWorldPreview(guiCreateWorld, seed, seedText, worldType, "");
         embeddedPreview.init(
             mc,
-            tabManager.getParent().width,
-            tabManager.getParent().height,
+            guiCreateWorld.width,
+            guiCreateWorld.height,
             0,
             PANEL_TOP,
             width(),
             height() - CONTROL_BOTTOM_MARGIN - CONTROL_BUTTON_HEIGHT - CONTROL_TOP_MARGIN);
-        embeddedPreview.setEmbeddedReturnScreen(tabManager.getParent());
+        embeddedPreview.setEmbeddedReturnScreen(guiCreateWorld);
         embeddedPreview.setEmbeddedShowBottomControls(false);
         lastSeedText = seedText;
-        lastWorldTypeIndex = getWorldTypeIndex();
+        lastWorldTypeIndex = worldTypeIndex;
         updateControlLabels();
     }
 
@@ -262,10 +268,9 @@ public class CreateWorldPreviewTab extends AbstractScreenTab {
         if (embeddedPreview == null) {
             return;
         }
-        GuiCreateWorld parent = tabManager.getParent();
         mc.displayGuiScreen(
             new CreateWorldPreviewGotoScreen(
-                parent,
+                guiCreateWorld,
                 embeddedPreview,
                 embeddedPreview.getCenterBlockX(),
                 embeddedPreview.getCenterBlockZ()));
@@ -401,11 +406,11 @@ public class CreateWorldPreviewTab extends AbstractScreenTab {
     }
 
     private int width() {
-        return tabManager.getParent().width;
+        return guiCreateWorld.width;
     }
 
     private int height() {
-        return tabManager.getParent().height;
+        return guiCreateWorld.height;
     }
 
     private long parseSeed(String seedText) {
@@ -460,7 +465,7 @@ public class CreateWorldPreviewTab extends AbstractScreenTab {
     }
 
     private String resolveSeedText() {
-        String seedText = getSeed();
+        String seedText = access.modernWorldCreatingUI$getSeed();
         if (!MathHelper.stringNullOrLengthZero(seedText)) {
             return seedText;
         }

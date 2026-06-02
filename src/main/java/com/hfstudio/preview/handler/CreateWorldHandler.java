@@ -93,8 +93,7 @@ public class CreateWorldHandler {
 
     @SubscribeEvent
     public void onDrawScreen(GuiScreenEvent.DrawScreenEvent.Pre event) {
-        if (!(event.gui instanceof GuiCreateWorld)) return;
-        GuiCreateWorld screen = (GuiCreateWorld) event.gui;
+        if (!(event.gui instanceof GuiCreateWorld screen)) return;
         CreateWorldScreenAdapter adapter = getAdapter(screen);
         if (adapter != vanillaAdapter) {
             return;
@@ -113,8 +112,7 @@ public class CreateWorldHandler {
         Minecraft mc = Minecraft.getMinecraft();
         String tooltip = StatCollector.translateToLocal("worldpreview.button.tooltip");
 
-        if (event.gui instanceof GuiCreateWorld) {
-            GuiCreateWorld screen = (GuiCreateWorld) event.gui;
+        if (event.gui instanceof GuiCreateWorld screen) {
             if (getAdapter(screen) != vanillaAdapter) {
                 return;
             }

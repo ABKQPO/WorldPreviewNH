@@ -4,7 +4,8 @@ dependencies {
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:Realistic-World-Gen:alpha-1.5.2:dev")
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:NotEnoughItems:2.7.44-GTNH:dev")
 
-    compileOnly files("libs/ModernCreateWorldUI-5.1.1-deobf.jar")
+    compileOnlyApi("com.github.song682:CatFrame:v0.0.7:deobf") { transitive = false }
+    compileOnlyApi("com.github.song682:CreateWorldUI:v6.0.0-hotfix2:deobf") { transitive = false }
 
     compileOnly("org.projectlombok:lombok:1.18.42") { transitive = false }
     annotationProcessor("org.projectlombok:lombok:1.18.42")

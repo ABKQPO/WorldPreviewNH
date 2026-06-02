@@ -2,7 +2,8 @@ package com.hfstudio.preview.integration.createworldui;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
-import decok.dfcdvadstf.createworldui.api.tab.TabRegistry;
+import decok.dfcdvadstf.catframe.ui.tab.TabRegistry;
+import decok.dfcdvadstf.createworldui.tab.CreateWorldUITabBar;
 
 /**
  * Optional CreateWorldUI integration entry point.
@@ -21,6 +22,10 @@ public class CreateWorldUiCompat {
 
     @Optional.Method(modid = MOD_ID)
     protected void registerPreviewTab() {
-        TabRegistry.registerTab(CreateWorldPreviewTab::new, PREVIEW_TAB_ID, "worldpreview.tab.preview");
+        TabRegistry.registerTab(
+            CreateWorldUITabBar.BAR_ID,
+            CreateWorldPreviewTab::new,
+            PREVIEW_TAB_ID,
+            "worldpreview.tab.preview");
     }
 }
